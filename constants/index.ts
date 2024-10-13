@@ -27,7 +27,7 @@ export const PatientFormDefaultValues = {
 };
 
 export const IdentificationTypes = [
-    "Aadhar Card",
+  "Aadhar Card",
   "Birth Certificate",
   "Driver's License",
   "Medical Insurance Card/Policy",

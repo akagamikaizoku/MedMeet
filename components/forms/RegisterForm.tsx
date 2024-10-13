@@ -1,4 +1,4 @@
-"use client"
+"use client";
  
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -67,6 +67,8 @@ const RegisterForm = ({ user }: { user: User }) => {
     } catch (error) {
       console.log(error);
     }
+
+    setIsLoading(false);
   }
 
   return (
@@ -297,7 +299,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             <CustomFormField
                 fieldType={FormFieldType.SKELETON}
                 control={form.control}
-                name="identificationDocumentUrl"
+                name="identificationDocument"
                 label="Upload Identification Document (Scanned Copy)"
                 renderSkeleton={(field) => (
                     <FormControl>
