@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import CustomFormField from "../CustomFormField"
 import SubmitButton from "../SubmitButton"
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react";
 import { getAppointmentSchema } from "@/lib/validation"
 import { useRouter } from "next/navigation"
 import { createUser } from "@/lib/actions/patient.actions"
@@ -16,6 +16,7 @@ import { Doctors } from "@/constants"
 import { SelectItem } from "../ui/select"
 import Image from "next/image"
 import { createAppointment } from "@/lib/actions/appointment.actions"
+import "react-datepicker/dist/react-datepicker.css";
  
 const AppointmentForm = (
     { userId, patientId, type }: { userId: string; patientId: string, type: "create" | "cancel" | "schedule" }
@@ -56,7 +57,7 @@ const AppointmentForm = (
       if (type === 'create' && patientId) {
         const appointmentData = {
             userId,
-            patientId: patientId,
+            patient: patientId,
             primaryPhysician: values.primaryPhysician,
             schedule: new Date(values.schedule),
             reason: values.reason!,
@@ -68,7 +69,7 @@ const AppointmentForm = (
 
         if (appointment) {
             form.reset();
-            router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.id}`);
+            router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`);
         }
       }
 
@@ -97,79 +98,79 @@ const AppointmentForm = (
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
-        <section className="mb-10 space-y-4">
-          <h1 className="header ">New Appointment 📋</h1>
-          <p className="text-dark-700">Request a new Appointment in just 10 seconds.</p>
-        </section>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
+            <section className="mb-10 space-y-4">
+            <h1 className="header ">New Appointment 📋</h1>
+            <p className="text-dark-700">Request a new Appointment in just 10 seconds.</p>
+            </section>
 
-        {type !== "cancel" && (
-            <>
-                <CustomFormField
-                fieldType={FormFieldType.SELECT}
-                control={form.control}
-                name="primaryPhysician"
-                label="Doctor"
-                placeholder="Select a Doctor"
-                >
-                    {Doctors.map((doctor) => (
-                        <SelectItem key={doctor.name} value={doctor.name}>
-                            <div className="flex cursor-pointer items-center gap-2">
-                                <Image 
-                                    src={doctor.image}
-                                    width={32}
-                                    height={32}
-                                    alt={doctor.name}
-                                    className="rounded-full border border-dark-500"
-                                />
-                                <p>{doctor.name}</p>
-                            </div>
-                        </SelectItem>
-                    ))}
-                </CustomFormField>
-
-                <CustomFormField 
-                    fieldType={FormFieldType.DATE_PICKER}
+            {type !== "cancel" && (
+                <>
+                    <CustomFormField
+                    fieldType={FormFieldType.SELECT}
                     control={form.control}
-                    name="schedule"
-                    label="Appointment Date"
-                    showTimeSelect
-                    dateFormat="dd/MM/yyyy - h:mm aa"
+                    name="primaryPhysician"
+                    label="Doctor"
+                    placeholder="Select a Doctor"
+                    >
+                        {Doctors.map((doctor) => (
+                            <SelectItem key={doctor.name} value={doctor.name}>
+                                <div className="flex cursor-pointer items-center gap-2">
+                                    <Image 
+                                        src={doctor.image}
+                                        width={32}
+                                        height={32}
+                                        alt={doctor.name}
+                                        className="rounded-full border border-dark-500"
+                                    />
+                                    <p>{doctor.name}</p>
+                                </div>
+                            </SelectItem>
+                        ))}
+                    </CustomFormField>
+
+                    <CustomFormField 
+                        fieldType={FormFieldType.DATE_PICKER}
+                        control={form.control}
+                        name="schedule"
+                        label="Appointment Date"
+                        showTimeSelect
+                        dateFormat="dd/MM/yyyy - h:mm aa"
+                    />
+
+                    <div className="flex flex-col gap-6 xl:flex-row">
+                        <CustomFormField 
+                            fieldType={FormFieldType.TEXTAREA}
+                            control={form.control}
+                            name="reason"
+                            label="Reason for Appointment"
+                            placeholder="Enter the reason for your appointment"
+                        />
+
+                        <CustomFormField 
+                            fieldType={FormFieldType.TEXTAREA}
+                            control={form.control}
+                            name="note"
+                            label="Additional Notes"
+                            placeholder="Enter any additional notes"
+                        />
+                    </div>
+                </>
+            )}
+
+            {type === "cancel" && (
+                <CustomFormField 
+                    fieldType={FormFieldType.TEXTAREA}
+                    control={form.control}
+                    name="cancellationReason"
+                    label="Reason for Cancellation"
+                    placeholder="Enter the reason for the cancellation"
                 />
+            )}
 
-                <div className="flex flex-col gap-6 xl:flex-row">
-                    <CustomFormField 
-                        fieldType={FormFieldType.TEXTAREA}
-                        control={form.control}
-                        name="reason"
-                        label="Reason for Appointment"
-                        placeholder="Enter the reason for your appointment"
-                    />
-
-                    <CustomFormField 
-                        fieldType={FormFieldType.TEXTAREA}
-                        control={form.control}
-                        name="note"
-                        label="Additional Notes"
-                        placeholder="Enter any additional notes"
-                    />
-                </div>
-            </>
-        )}
-
-        {type === "cancel" && (
-            <CustomFormField 
-                fieldType={FormFieldType.TEXTAREA}
-                control={form.control}
-                name="cancellationReason"
-                label="Reason for Cancellation"
-                placeholder="Enter the reason for the cancellation"
-            />
-        )}
-
-        <SubmitButton isLoading={isLoading} className={`${type === 'cancel' ? 'shad-danger-btn' : 'shad-primary-btn'} w-full`}>{buttonLabel}</SubmitButton>
-        
-      </form>
+            <SubmitButton isLoading={isLoading} className={`${type === 'cancel' ? 'shad-danger-btn' : 'shad-primary-btn'} w-full`}>{buttonLabel}</SubmitButton>
+            
+        </form>
     </Form>
   )
 }
