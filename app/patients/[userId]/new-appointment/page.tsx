@@ -6,7 +6,7 @@ import  AppointmentForm  from "@/components/forms/AppointmentForm";
 import { getPatient } from "@/lib/actions/patient.actions";
 
 export default async function NewAppointment({ params: { userId }}: SearchParamProps) {
-  const patient = getPatient(userId);
+  const patient = await getPatient(userId);
   return (
 
     <div className="flex h-screen max-h-screen">
