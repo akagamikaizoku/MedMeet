@@ -7,8 +7,6 @@ import Link from 'next/link'
 import React from 'react'
 import { columns, Payment } from '@/components/table/columns'
 
-
-
 const Admin = async () => {
 
     const appointments = await getRecentAppointmentList();
