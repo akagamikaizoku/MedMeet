@@ -76,8 +76,6 @@ const AppointmentForm = (
     } catch (error) {
       console.log(error);
     }
-
-    setIsLoading(false);
   }
 
   let buttonLabel;
