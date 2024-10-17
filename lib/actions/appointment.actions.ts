@@ -30,6 +30,7 @@ export const getAppointment = async (appointmentId: string) => {
             appointmentId,
         );
 
+        revalidatePath('/admin');
         return parseStringify(appointment);
     } catch (error) {
         console.log(error);
@@ -67,6 +68,7 @@ export const getRecentAppointmentList = async () => {
             ...counts,
             documents: appointments.documents
         }
+        revalidatePath('/admin');
 
         return parseStringify(data);
     } catch (error) {
