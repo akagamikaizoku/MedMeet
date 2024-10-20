@@ -14,7 +14,7 @@ const Admin = async () => {
     const appointments = await getRecentAppointmentList();
 
     return (
-        <div className='mx-auto flex max-w-7xl flex-col space-y-14'>
+        <div className='mt-10 mx-auto flex max-w-7xl flex-col space-y-14'>
             {/* <header className='admin-header'>
                 <Link href='/' className='cursor-pointer'>
                     <Image 
